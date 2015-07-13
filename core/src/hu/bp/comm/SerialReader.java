@@ -19,7 +19,8 @@ public class SerialReader implements SerialPortEventListener {
 		int len = -1;
 		try {
 			while ((len = this.in.read(buffer)) > -1) {
-				System.out.print(new String(buffer, 0, len));
+				System.out.println(len);
+				System.out.println(new String(buffer, 0, len));
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
