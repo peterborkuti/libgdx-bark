@@ -10,8 +10,15 @@ public class SerialReader implements SerialPortEventListener {
 
 	InputStream in;
 
-	public SerialReader(InputStream in) {
+	private volatile String lastLine;
+
+	private volatile StringBuffer tmp = new StringBuffer();
+
+	private final SerialReaderListener listener;
+
+	public SerialReader(InputStream in, SerialReaderListener listener) {
 		this.in = in;
+		this.listener = listener;
 	}
 
 	public void read() {
@@ -19,12 +26,15 @@ public class SerialReader implements SerialPortEventListener {
 		int len = -1;
 		try {
 			while ((len = this.in.read(buffer)) > -1) {
-				System.out.println(len);
-				System.out.println(new String(buffer, 0, len));
+				System.out.println(tmp);
+				tmp.append(new String(buffer, 0, len));
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		if (listener.eventReader(tmp.toString())) {
+			tmp.setLength(0);
+		};
 	}
 
 	@Override

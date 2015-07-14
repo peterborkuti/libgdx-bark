@@ -35,6 +35,7 @@ public class CommHelper implements ApplicationListener {
 	final static int DATA_BITS = SerialPort.DATABITS_8;
 	final static boolean DTR = true;
 	final static int FLOW_CONTROL = SerialPort.FLOWCONTROL_NONE;
+	final SerialReaderListener listener;
 
 	/**
 	 * http://stackoverflow.com/questions/10382578/flow-controll-settings-for-
@@ -55,6 +56,10 @@ public class CommHelper implements ApplicationListener {
 
 	private CommPort commPort = null;
 	private boolean isOpen = false;
+
+	public CommHelper(SerialReaderListener listener) {
+		this.listener = listener;
+	}
 
 	public void listPorts() {
 		Gdx.app.log("CommPort", "list port");
@@ -84,7 +89,7 @@ public class CommHelper implements ApplicationListener {
 
 		// (new Thread(new SerialWriter(out))).start();
 
-		port.addEventListener(new SerialReader(in));
+		port.addEventListener(new SerialReader(in, listener));
 		port.notifyOnDataAvailable(true);
 	}
 

@@ -1,6 +1,8 @@
 package hu.bp.game.gdx.barking;
 
 import hu.bp.comm.CommHelper;
+import hu.bp.comm.SerialLineReader;
+import hu.bp.comm.SerialReaderListener;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -12,8 +14,12 @@ import com.badlogic.gdx.utils.TimeUtils;
 public class Bark extends ApplicationAdapter {
 
 	private void startSerialReading() {
+		if (serialReaderListener == null) {
+			serialReaderListener = new SerialLineReader();
+		}
+
 		if (commHelper == null) {
-			commHelper = new CommHelper();
+			commHelper = new CommHelper(serialReaderListener);
 		}
 
 		commHelper.listPorts();
@@ -53,6 +59,7 @@ public class Bark extends ApplicationAdapter {
 	long startPlayingTime;
 	int barkIndex;
 	private boolean BARK = false;
+	private SerialReaderListener serialReaderListener;
 	private CommHelper commHelper;
 
 	private void initBarking() {
