@@ -29,6 +29,7 @@ public class SerialLineReader implements SerialReaderListener {
 		return true;
 	}
 
+	@Override
 	public boolean isData() {
 		return !"".equals(line);
 	}

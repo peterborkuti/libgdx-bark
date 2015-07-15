@@ -1,13 +1,5 @@
 package hu.bp.comm;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.TooManyListenersException;
-
-import com.badlogic.gdx.ApplicationListener;
-import com.badlogic.gdx.Gdx;
-
 import gnu.io.CommPort;
 /**
  * apt-get install librxtx-java
@@ -18,6 +10,14 @@ import gnu.io.CommPortIdentifier;
 import gnu.io.PortInUseException;
 import gnu.io.SerialPort;
 import gnu.io.UnsupportedCommOperationException;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.TooManyListenersException;
+
+import com.badlogic.gdx.ApplicationListener;
+import com.badlogic.gdx.Gdx;
 
 /**
  * codebase:
@@ -35,14 +35,16 @@ public class CommHelper implements ApplicationListener {
 	final static int DATA_BITS = SerialPort.DATABITS_8;
 	final static boolean DTR = true;
 	final static int FLOW_CONTROL = SerialPort.FLOWCONTROL_NONE;
-	final SerialReaderListener listener;
-
 	/**
 	 * http://stackoverflow.com/questions/10382578/flow-controll-settings-for-
 	 * serial-communication-between-java-rxtx-and-arduino
 	 * 
 	 */
 	final static boolean RTS = true;
+
+	private SerialReaderListener listener;
+
+
 
 	// the timeout value for connecting with the port
 	final static int TIMEOUT = 2000;
@@ -100,9 +102,22 @@ public class CommHelper implements ApplicationListener {
 
 			SerialPort serialPort = (SerialPort) commPort;
 
+			//touchForCDCReset from Arduino's Serial.java
+			//it is needed to restart communication
+			//	pull out mouse from the window -> program paused
+			//	pull in mouse -> program restarted and reconnect to serial line
+			//without these code, after re-connect, nothing read
+			serialPort.setSerialPortParams(9600, 8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
+			serialPort.setDTR(false);
+			serialPort.close();
+
+			commPort = port.open("Barking", TIMEOUT);
+			serialPort = (SerialPort) commPort;
+
 			initSerialPort(serialPort);
 
 			isOpen = true;
+			Gdx.app.log("CommHelper", "connected to serial line");
 
 		} catch (PortInUseException e) {
 			Gdx.app.error("CommHelper", port + " is in use. (" + e.toString()
@@ -172,9 +187,22 @@ public class CommHelper implements ApplicationListener {
 
 	private void stop() {
 		if (commPort != null && isOpen) {
+			((SerialPort)commPort).notifyOnDataAvailable(false);
+			((SerialPort)commPort).removeEventListener();
+			try {
+				in.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			try {
+				out.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			commPort.close();
 			commPort = null;
 			isOpen = false;
+			Gdx.app.log("CommHelper", "Serial port closed");
 		}
 	}
 

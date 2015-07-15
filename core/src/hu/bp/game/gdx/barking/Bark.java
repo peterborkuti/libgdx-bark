@@ -14,10 +14,6 @@ import com.badlogic.gdx.utils.TimeUtils;
 public class Bark extends ApplicationAdapter {
 
 	private void startSerialReading() {
-		if (serialReaderListener == null) {
-			serialReaderListener = new SerialLineReader();
-		}
-
 		if (commHelper == null) {
 			commHelper = new CommHelper(serialReaderListener);
 		}
@@ -59,7 +55,7 @@ public class Bark extends ApplicationAdapter {
 	long startPlayingTime;
 	int barkIndex;
 	private boolean BARK = false;
-	private SerialReaderListener serialReaderListener;
+	private SerialReaderListener serialReaderListener = new SerialLineReader();
 	private CommHelper commHelper;
 
 	private void initBarking() {
@@ -104,6 +100,9 @@ public class Bark extends ApplicationAdapter {
 
 		if (BARK ) {
 			bark();
+		}
+		if ((serialReaderListener != null) && serialReaderListener.isData()) {
+			System.out.println(">" + serialReaderListener.getData() + "<");
 		}
 	}
 
