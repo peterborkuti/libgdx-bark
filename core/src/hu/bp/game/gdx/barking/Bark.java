@@ -13,6 +13,8 @@ import com.badlogic.gdx.utils.TimeUtils;
 
 public class Bark extends ApplicationAdapter {
 
+	private static final int MAX_DISTANCE = 500; // cm
+
 	private void startSerialReading() {
 		if (commHelper == null) {
 			commHelper = new CommHelper(serialReaderListener);
@@ -54,7 +56,7 @@ public class Bark extends ApplicationAdapter {
 	long delayInMillis;
 	long startPlayingTime;
 	int barkIndex;
-	private boolean BARK = false;
+	private boolean BARK = true;
 	private SerialReaderListener serialReaderListener = new SerialLineReader();
 	private CommHelper commHelper;
 
@@ -80,11 +82,11 @@ public class Bark extends ApplicationAdapter {
 		initBarking();
 	}
 
-	private void bark() {
+	private void bark(boolean pir, int distance) {
 		if (!barks[barkIndex].isPlaying()) {
 			if (TimeUtils.timeSinceMillis(startPlayingTime) > delayInMillis) {
 				startPlayingTime = TimeUtils.millis();
-				delayInMillis = MathUtils.random(100, 300);
+				delayInMillis = MathUtils.random(distance, distance * 2);
 				barkIndex = MathUtils.random(barks.length - 1);
 				barks[barkIndex].setVolume((float)(Math.random() * 0.5 + 0.5));
 				barks[barkIndex].play();
@@ -98,11 +100,21 @@ public class Bark extends ApplicationAdapter {
 		Gdx.gl.glClearColor(1, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		if (BARK ) {
-			bark();
-		}
+		boolean pir = false;
+		int distance = MAX_DISTANCE;
+
 		if ((serialReaderListener != null) && serialReaderListener.isData()) {
-			System.out.println(">" + serialReaderListener.getData() + "<");
+			String parts[] = serialReaderListener.getData().split(":",4);
+			pir = ("1".equals(parts[3]));
+			int microsec = Math.round(Float.parseFloat(parts[1]));
+			if (pir && microsec != 0) {
+				distance = Math.round(microsec / 74.0f / 2.0f);
+				Gdx.app.log("Bark","distance:" + distance);
+			}
+		}
+
+		if (BARK && pir) {
+			bark(pir, distance);
 		}
 	}
 
