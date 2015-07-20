@@ -1,15 +1,14 @@
 package hu.bp.game.gdx.barking;
 
+import hu.bp.bark.BarkPlayerForGdx;
+import hu.bp.bark.Distance;
 import hu.bp.comm.CommHelper;
 import hu.bp.comm.SerialLineReader;
 import hu.bp.comm.SerialReaderListener;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.utils.TimeUtils;
 
 public class Bark extends ApplicationAdapter {
 
@@ -52,47 +51,17 @@ public class Bark extends ApplicationAdapter {
 		super.dispose();
 	}
 
-	Music barks[] = new Music[6];
-	long delayInMillis;
-	long startPlayingTime;
-	int barkIndex;
+	BarkPlayerForGdx player = new BarkPlayerForGdx("bark-%2d.wav", 1, 6);
+
 	private boolean BARK = true;
 	private SerialReaderListener serialReaderListener = new SerialLineReader();
 	private CommHelper commHelper;
 
-	private void initBarking() {
-		for (int i = 1; i <= barks.length; i++) {
-			//padding with zero from the left in two chars wide
-			String num = ("00" + i).substring((""+i).length());
-			String fileName = "bark-" + num + ".wav";
-			barks[i - 1] = Gdx.audio.newMusic(Gdx.files.internal(fileName));
-			barks[i - 1].setLooping(false);
-		}
-
-		barkIndex = MathUtils.random(barks.length - 1);
-		delayInMillis = 200;
-		startPlayingTime = TimeUtils.millis();
-		delayInMillis = 200;
-	}
 
 	@Override
 	public void create () {
 		startSerialReading();
 
-		initBarking();
-	}
-
-	private void bark(boolean pir, int distance) {
-		if (!barks[barkIndex].isPlaying()) {
-			if (TimeUtils.timeSinceMillis(startPlayingTime) > delayInMillis) {
-				startPlayingTime = TimeUtils.millis();
-				delayInMillis = MathUtils.random(distance, distance * 2);
-				barkIndex = MathUtils.random(barks.length - 1);
-				barks[barkIndex].setVolume((float)(Math.random() * 0.5 + 0.5));
-				barks[barkIndex].play();
-				Gdx.app.debug("bark", barkIndex + "," + delayInMillis);
-			}
-		}
 	}
 
 	@Override
@@ -113,8 +82,10 @@ public class Bark extends ApplicationAdapter {
 			}
 		}
 
-		if (BARK && pir) {
-			bark(pir, distance);
+		Distance dist = Distance.get(distance, MAX_DISTANCE);
+
+		if (BARK && player.needPlay(dist, pir, 5)) {
+			player.play(200, 1);
 		}
 	}
 
