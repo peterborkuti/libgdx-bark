@@ -15,7 +15,8 @@ public abstract class BarkPlayer {
 	public BarkPlayer(String fileNamePattern, int minIndex, int maxIndex) {
 		for (int i = minIndex; i < maxIndex; i++) {
 			String fileName = String.format(fileNamePattern, i);
-			Gdx.app.log("FileName:", + i +" " + fileName);
+			System.out.println(fileName);
+			System.out.println(fileName);
 			fileNames.add(fileName);
 		}
 	}

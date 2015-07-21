@@ -9,6 +9,7 @@ import hu.bp.comm.SerialReaderListener;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.math.MathUtils;
 
 public class Bark extends ApplicationAdapter {
 
@@ -51,17 +52,19 @@ public class Bark extends ApplicationAdapter {
 		super.dispose();
 	}
 
-	BarkPlayerForGdx player = new BarkPlayerForGdx("bark-%2d.wav", 1, 6);
+	BarkPlayerForGdx player = new BarkPlayerForGdx("bark-%02d.wav", 1, 6);
 
-	private boolean BARK = true;
+	private static boolean BARK = true;
+	private static boolean SERIAL = false;
 	private SerialReaderListener serialReaderListener = new SerialLineReader();
 	private CommHelper commHelper;
 
 
 	@Override
 	public void create () {
-		startSerialReading();
-
+		if (SERIAL) {
+			startSerialReading();
+		}
 	}
 
 	@Override
@@ -72,13 +75,19 @@ public class Bark extends ApplicationAdapter {
 		boolean pir = false;
 		int distance = MAX_DISTANCE;
 
-		if ((serialReaderListener != null) && serialReaderListener.isData()) {
-			String parts[] = serialReaderListener.getData().split(":",4);
-			pir = ("1".equals(parts[3]));
-			int microsec = Math.round(Float.parseFloat(parts[1]));
-			if (pir && microsec != 0) {
-				distance = Math.round(microsec / 74.0f / 2.0f);
-				Gdx.app.log("Bark","distance:" + distance);
+		if (!SERIAL) {
+			distance = MathUtils.random(MAX_DISTANCE);
+			pir = (Math.random() < 0.2);
+		}
+		else {
+			if ((serialReaderListener != null) && serialReaderListener.isData()) {
+				String parts[] = serialReaderListener.getData().split(":",4);
+				pir = ("1".equals(parts[3]));
+				int microsec = Math.round(Float.parseFloat(parts[1]));
+				if (pir && microsec != 0) {
+					distance = Math.round(microsec / 74.0f / 2.0f);
+					Gdx.app.log("Bark","distance:" + distance);
+				}
 			}
 		}
 
