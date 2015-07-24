@@ -1,8 +1,6 @@
 package hu.bp.bark;
 
-import java.util.ArrayList;
-
-import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.utils.Array;
 
 public abstract class BarkPlayer {
 
@@ -10,19 +8,23 @@ public abstract class BarkPlayer {
 	volatile long startDelayInMillis = 0;
 	volatile long delayAfterPlayInMillis = 0;
 
-	final ArrayList<String> fileNames = new ArrayList<String>();
+	private volatile Array<String> fileNames;
 
-	public BarkPlayer(String fileNamePattern, int minIndex, int maxIndex) {
-		for (int i = minIndex; i < maxIndex; i++) {
+	public Array<String> getFileNames() {
+		return fileNames;
+	}
+
+	public void generateFileNames(String fileNamePattern, int minIndex, int maxIndex) {
+		fileNames =  new Array<String>();
+
+		for (int i = minIndex; i <= maxIndex; i++) {
 			String fileName = String.format(fileNamePattern, i);
-			System.out.println(fileName);
-			System.out.println(fileName);
 			fileNames.add(fileName);
 		}
 	}
 
 	//should be called when sound ends
-	public void SoundEnded() {
+	public synchronized void SoundEnded() {
 		startDelayInMillis = System.currentTimeMillis();
 	}
 
@@ -33,26 +35,26 @@ public abstract class BarkPlayer {
 				startDelayInMillis + delayAfterPlayInMillis);
 	}
 
-	protected abstract void doPlay(float volume);
+	protected abstract void doPlay(double d);
 	protected abstract boolean isLibraryPlaying();
 
-	public void play(int delayInMs, float volume) {
-		delayAfterPlayInMillis = delayInMs;
-		doPlay(volume);
+	public void play(long oNE_SEC, double d) {
+		delayAfterPlayInMillis = oNE_SEC;
+		doPlay(d);
 	}
 
 	public void rememberMoveDetection(boolean moveDetected) {
 		if (moveDetected) {
 			lastMoveDetectedMillis = System.currentTimeMillis();
 		}
-	};
+	}
 
-	public boolean moveDetectedIn(boolean moveDetected, int seconds) {
+	public boolean moveDetectedInSeconds(boolean moveDetected, int seconds) {
 		rememberMoveDetection(moveDetected);
 		return ((System.currentTimeMillis() - lastMoveDetectedMillis) < (seconds * 1000));
-	};
+	}
 
 	public boolean needPlay(Distance distance, boolean moveDetected, int seconds) {
-		return (Distance.FAR != distance) && moveDetectedIn(moveDetected, seconds);
+		return (Distance.FAR != distance) && moveDetectedInSeconds(moveDetected, seconds);
 	}
 }

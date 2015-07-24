@@ -52,7 +52,7 @@ public class Bark extends ApplicationAdapter {
 		super.dispose();
 	}
 
-	BarkPlayerForGdx player = new BarkPlayerForGdx("bark-%02d.wav", 1, 6);
+	BarkPlayerForGdx player = new BarkPlayerForGdx();
 
 	private static boolean BARK = true;
 	private static boolean SERIAL = false;
@@ -62,6 +62,7 @@ public class Bark extends ApplicationAdapter {
 
 	@Override
 	public void create () {
+		player.init("bark-%02d.wav", 1, 6);
 		if (SERIAL) {
 			startSerialReading();
 		}
@@ -93,7 +94,7 @@ public class Bark extends ApplicationAdapter {
 
 		Distance dist = Distance.get(distance, MAX_DISTANCE);
 
-		if (BARK && player.needPlay(dist, pir, 5)) {
+		if (BARK && player.needPlay(dist, pir, 5) && !player.isPlaying()) {
 			player.play(200, 1);
 		}
 	}
