@@ -13,6 +13,10 @@ public class BarkPlayerForGdx extends BarkPlayer implements OnCompletionListener
 
 	private Music music;
 
+	public BarkPlayerForGdx(String fileNamePattern, int minIndex, int maxIndex) {
+		init(fileNamePattern, minIndex, maxIndex);
+	}
+
 	public void init(String fileNamePattern, int minIndex, int maxIndex) {
 		generateFileNames(fileNamePattern, minIndex, maxIndex);
 
@@ -27,7 +31,9 @@ public class BarkPlayerForGdx extends BarkPlayer implements OnCompletionListener
 
 	@Override
 	protected void doPlay(double volume) {
-		music = barks.get(MathUtils.random(barks.size() - 1));
+		int index = MathUtils.random(barks.size() - 1);
+		music = barks.get(index);
+		Gdx.app.log("BarkPlayerForGdx", "doPlay " + index + "," + delayAfterPlayInMillis);
 		music.play();
 	}
 

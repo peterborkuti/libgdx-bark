@@ -16,7 +16,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.TooManyListenersException;
 
-import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 
 /**
@@ -27,7 +26,7 @@ import com.badlogic.gdx.Gdx;
  * @author Peter Borkuti
  *
  */
-public class CommHelper implements ApplicationListener {
+public class CommHelper {
 	// Arduino Serial Settings
 	private int BAUD_RATE = 9600;
 	final static int STOP_BIT = SerialPort.STOPBITS_1;
@@ -159,33 +158,7 @@ public class CommHelper implements ApplicationListener {
 		return isOpen;
 	}
 
-	@Override
-	public void create() {
-	}
-
-	@Override
-	public void resize(int width, int height) {
-	}
-
-	@Override
-	public void render() {
-	}
-
-	@Override
-	public void pause() {
-		Gdx.app.log("CommHelper", "pause");
-		stop();
-	}
-
-	@Override
-	public void resume() {
-		Gdx.app.log("CommHelper", "resume");
-		if (!isOpen) {
-			connectToFirstSerialPort();
-		}
-	}
-
-	private void stop() {
+	public void stop() {
 		if (commPort != null && isOpen) {
 			((SerialPort)commPort).notifyOnDataAvailable(false);
 			((SerialPort)commPort).removeEventListener();
@@ -206,10 +179,5 @@ public class CommHelper implements ApplicationListener {
 		}
 	}
 
-	@Override
-	public void dispose() {
-		Gdx.app.log("CommHelper", "dispose");
-		stop();
-	}
 
 }

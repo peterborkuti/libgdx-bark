@@ -1,5 +1,6 @@
 package hu.bp.bark;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
 
 public abstract class BarkPlayer {
@@ -38,9 +39,9 @@ public abstract class BarkPlayer {
 	protected abstract void doPlay(double d);
 	protected abstract boolean isLibraryPlaying();
 
-	public void play(long oNE_SEC, double d) {
-		delayAfterPlayInMillis = oNE_SEC;
-		doPlay(d);
+	public void play(long delayAfterPlay, double volume) {
+		delayAfterPlayInMillis = delayAfterPlay;
+		doPlay(volume);
 	}
 
 	public void rememberMoveDetection(boolean moveDetected) {
@@ -55,6 +56,8 @@ public abstract class BarkPlayer {
 	}
 
 	public boolean needPlay(Distance distance, boolean moveDetected, int seconds) {
-		return (Distance.FAR != distance) && moveDetectedInSeconds(moveDetected, seconds);
+		boolean isMoveDetected = moveDetectedInSeconds(moveDetected, seconds);
+		Gdx.app.log("BarkPlayer","needPlay:" + distance.name() + " && " + isMoveDetected);
+		return (Distance.FAR != distance) && isMoveDetected;
 	}
 }
