@@ -1,7 +1,6 @@
 package hu.bp.bark.actors;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
@@ -10,7 +9,7 @@ public class TriangleClickListenerImpl extends ClickListener implements Triangle
 	/**
 	 * 
 	 */
-	private Actor triangleActor;
+	private TriangleActor triangleActor;
 
 	private float touchDownX, touchDownY, touchWidth, touchHeight;
 	private boolean isTouchDown = false;
@@ -24,7 +23,6 @@ public class TriangleClickListenerImpl extends ClickListener implements Triangle
 	@Override
 	public boolean touchDown(InputEvent event, float x, float y,
 			int pointer, int button) {
-		// TODO Auto-generated method stub
 		boolean sup = super.touchDown(event, x, y, pointer, button);
 		Gdx.app.log("TriangleActorListener", x + "," + y + " touchDown" + sup);
 		touchDownX = x;
@@ -42,7 +40,6 @@ public class TriangleClickListenerImpl extends ClickListener implements Triangle
 	@Override
 	public void touchUp(InputEvent event, float x, float y, int pointer,
 			int button) {
-		// TODO Auto-generated method stub
 		super.touchUp(event, x, y, pointer, button);
 		isTouchDown = false;
 		Gdx.app.log("TriangleActorListener", x + "," + y + " touchUp");
@@ -50,41 +47,17 @@ public class TriangleClickListenerImpl extends ClickListener implements Triangle
 
 	@Override
 	public void touchDragged(InputEvent event, float x, float y, int pointer) {
-		// TODO Auto-generated method stub
 		super.touchDragged(event, x, y, pointer);
-		Gdx.app.log("TriangleActorListener", (x -this.triangleActor.getX()) + "," + (y - this.triangleActor.getY())+ "touchDragged");
 		if (isTouchDown) {
 			float newWidth = Math.max((x - touchDownX + touchWidth), minWidth);
 			float newHeight = Math.max((y - touchDownY + touchHeight), minHeight);
 
-			triangleActor.setWidth(newWidth);
-			triangleActor.setHeight(newHeight);
+			triangleActor.setBounds(newWidth, newHeight);
 		}
 	}
 
 	@Override
-	public void enter(InputEvent event, float x, float y, int pointer,
-			Actor fromActor) {
-		// TODO Auto-generated method stub
-		super.enter(event, x, y, pointer, fromActor);
-		Gdx.app.log("TriangleActorListener", x + "," + y + "enter");
-	}
-
-	@Override
-	public void exit(InputEvent event, float x, float y, int pointer,
-			Actor toActor) {
-		super.exit(event, x, y, pointer, toActor);
-		//Gdx.app.log("TriangleActorListener", x + "," + y + "exit");
-	}
-
-	@Override
-	public void clicked(InputEvent event, float x, float y) {
-		super.clicked(event, x, y);
-		//Gdx.app.log("TriangleActorListener", x + "," + y + "clicked");
-	}
-
-	@Override
-	public void setActor(Actor actor) {
+	public void setActor(TriangleActor actor) {
 		triangleActor = actor;
 	}
 	

@@ -1,6 +1,7 @@
 package hu.bp.game.gdx.barking;
 
-import hu.bp.bark.actors.TriangleActor;
+import hu.bp.bark.actors.TestActor;
+import hu.bp.bark.actors.TriangleActorImpl;
 import hu.bp.bark.actors.TriangleClickListener;
 import hu.bp.bark.actors.TriangleClickListenerImpl;
 
@@ -8,11 +9,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 public class BarkTestScreen implements Screen {
@@ -20,16 +19,23 @@ public class BarkTestScreen implements Screen {
 
 	public BarkTestScreen() {
 		ClickListener pirListener = new TriangleClickListenerImpl(10, 10);
-		TriangleActor pirSensor = new TriangleActor(Color.GREEN, 100, 100, 0, 100);
+		TriangleActorImpl pirSensor = new TriangleActorImpl(Color.GREEN, 0, 150, 100, 100);
 		((TriangleClickListener) pirListener).setActor(pirSensor);
 		pirSensor.addListener(pirListener);
+		pirSensor.debug();
 
 		ClickListener distanceListener = new TriangleClickListenerImpl(10, 10);
-		TriangleActor distanceSensor = new TriangleActor(Color.BLUE, 100, 100, 0, 100);
+		TriangleActorImpl distanceSensor = new TriangleActorImpl(Color.BLUE, 0, 50, 30, 100);
 		((TriangleClickListener) distanceListener).setActor(distanceSensor);
 		distanceSensor.addListener(distanceListener);
+		distanceSensor.debug();
+	
+
+		//Actor a = new TestActor();
+		//a.debug();
 
 		stage = new Stage(new StretchViewport(200, 200));
+		//stage.addActor(a);
 		stage.addActor(pirSensor);
 		stage.addActor(distanceSensor);
 	}
