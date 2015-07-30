@@ -10,7 +10,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 
-public class TriangleActorImpl extends Actor implements TriangleActor {
+public class DraggableTriangleActor extends AbstractDraggableActor {
 
 	@Override
 	public Actor hit(float x, float y, boolean touchable) {
@@ -34,7 +34,6 @@ public class TriangleActorImpl extends Actor implements TriangleActor {
 		return null;
 	}
 
-	private Color _color;
 	private ShapeRenderer _renderer;
 	private int _leftX, _leftY;
 	public final int LEFT = 0;
@@ -42,16 +41,14 @@ public class TriangleActorImpl extends Actor implements TriangleActor {
 	public final int LOWER = 2;
 
 	public final int UPPER = 1;
-	
 
-	public TriangleActorImpl(Color color, int leftX, int leftY,int width, int height) {
-		super();
+	public DraggableTriangleActor(Color color, int leftX, int leftY,int width, int height) {
+		super(color, Color.RED);
 		_renderer = new ShapeRenderer();
 		this.setVisible(true);
-		_color = color;
 		_leftX = leftX;
 		_leftY = leftY;
-		setBounds(width, height);
+		dragged(width,height);
 	}
 
 	@Override
@@ -75,19 +72,6 @@ public class TriangleActorImpl extends Actor implements TriangleActor {
 		batch.begin();
 	}
 
-	@Override
-	public void drawDebug(ShapeRenderer shapes) {
-		Gdx.app.log("TriangleActor", "drawDebug");
-		super.drawDebug(shapes);
-	}
-
-	@Override
-	protected void drawDebugBounds(ShapeRenderer shapes) {
-		//Gdx.app.log("TriangleActor", "drawDebugBounds (" +
-		//	new Vector2(getX(),getY()) + "," + new Vector2(getWidth(),getHeight()));
-		super.drawDebugBounds(shapes);
-	}
-
 	public float getMinHeight() {
 		return 10;
 	}
@@ -106,9 +90,12 @@ public class TriangleActorImpl extends Actor implements TriangleActor {
 	}
 
 	@Override
-	public void setBounds(float width, float height) {
-		float newY = _leftY - height / 2;
-		setBounds(getX(), newY, width, height);
+	public void dragged(float dx, float dy) {
+		float newHeight = Math.max(getMinHeight(), getHeight() + dy);
+		float newWidth = Math.max(getMinWidth(), getWidth() + dx);
+
+		float newY = _leftY - newHeight / 2;
+		setBounds(_leftX, newY, newWidth, newHeight);
 	}
 
 
