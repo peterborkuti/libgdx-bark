@@ -1,7 +1,7 @@
 package hu.bp.game.gdx.barking;
 
-import hu.bp.bark.actors.DraggableClickListener;
-import hu.bp.bark.actors.DraggableClickListenerImpl;
+import hu.bp.bark.actors.DraggableListener;
+import hu.bp.bark.actors.DraggableListenerImpl;
 import hu.bp.bark.actors.DraggableRectangleActor;
 import hu.bp.bark.actors.DraggableTriangleActor;
 
@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 public class BarkTestScreen implements Screen {
@@ -18,21 +19,21 @@ public class BarkTestScreen implements Screen {
 
 	public BarkTestScreen() {
 
-		ClickListener enemyListener = new DraggableClickListenerImpl();
-		DraggableRectangleActor enemy = new DraggableRectangleActor(Color.MAGENTA, 150, 150, 30, 30);
-		((DraggableClickListener) enemyListener).setActor(enemy);
+		DragListener enemyListener = new DraggableListenerImpl();
+		DraggableRectangleActor enemy = new DraggableRectangleActor(Color.MAGENTA, 90, 50, 20, 20);
+		((DraggableListener) enemyListener).setActor(enemy);
 		enemy.addListener(enemyListener);
 		enemy.debug();
 
-		ClickListener pirListener = new DraggableClickListenerImpl();
-		DraggableTriangleActor pirSensor = new DraggableTriangleActor(Color.GREEN, 0, 150, 100, 100);
-		((DraggableClickListener) pirListener).setActor(pirSensor);
+		DragListener pirListener = new DraggableListenerImpl();
+		DraggableTriangleActor pirSensor = new DraggableTriangleActor(Color.GREEN, 0, 50, 50, 50);
+		((DraggableListener) pirListener).setActor(pirSensor);
 		pirSensor.addListener(pirListener);
 		pirSensor.debug();
 
-		ClickListener distanceListener = new DraggableClickListenerImpl();
-		DraggableTriangleActor distanceSensor = new DraggableTriangleActor(Color.BLUE, 0, 50, 30, 100);
-		((DraggableClickListener) distanceListener).setActor(distanceSensor);
+		DragListener distanceListener = new DraggableListenerImpl();
+		DraggableTriangleActor distanceSensor = new DraggableTriangleActor(Color.BLUE, 0, 50, 30, 50);
+		((DraggableListener) distanceListener).setActor(distanceSensor);
 		distanceSensor.addListener(distanceListener);
 		distanceSensor.debug();
 	
@@ -40,7 +41,7 @@ public class BarkTestScreen implements Screen {
 		//Actor a = new TestActor();
 		//a.debug();
 
-		stage = new Stage(new StretchViewport(200, 200));
+		stage = new Stage(new StretchViewport(100, 100));
 		//stage.addActor(a);
 		stage.addActor(pirSensor);
 		stage.addActor(distanceSensor);

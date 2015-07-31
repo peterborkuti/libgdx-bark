@@ -25,4 +25,5 @@ public abstract class AbstractDraggableActor extends Actor implements DraggableA
 		_color = _hitColor;
 	}
 
+
 }

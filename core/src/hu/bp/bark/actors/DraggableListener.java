@@ -1,7 +1,7 @@
 package hu.bp.bark.actors;
 
 
-public interface DraggableClickListener {
+public interface DraggableListener {
 	public void setActor(DraggableActor actor);
 
 }
