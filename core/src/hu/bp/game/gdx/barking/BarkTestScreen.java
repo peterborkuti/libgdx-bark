@@ -29,14 +29,19 @@ public class BarkTestScreen implements Screen {
 		enemy.addListener(enemyListener);
 		enemy.debug();
 
+		DraggableTriangleActor fakeTriangle = new DraggableTriangleActor(Color.MAGENTA, 90, 50, 20, 20);
+		fakeTriangle.setVisible(false);
+
 		DragListener pirListener = new DraggableListenerImpl();
 		DraggableTriangleActor pirSensor = new DraggableTriangleActor(Color.GREEN, 0, 50, 50, 50);
+		pirSensor.setFakeActor(fakeTriangle);
 		((DraggableListener) pirListener).setActor(pirSensor);
 		pirSensor.addListener(pirListener);
 		pirSensor.debug();
 
 		DragListener distanceListener = new DraggableListenerImpl();
 		DraggableTriangleActor distanceSensor = new DraggableTriangleActor(Color.BLUE, 0, 50, 30, 50);
+		distanceSensor.setFakeActor(fakeTriangle);
 		((DraggableListener) distanceListener).setActor(distanceSensor);
 		distanceSensor.addListener(distanceListener);
 		distanceSensor.debug();
@@ -51,6 +56,7 @@ public class BarkTestScreen implements Screen {
 		stage.addActor(distanceSensor);
 		stage.addActor(enemy);
 		stage.addActor(fakeEnemy);
+		stage.addActor(fakeTriangle);
 	}
 
 	@Override
