@@ -19,8 +19,12 @@ public class BarkTestScreen implements Screen {
 
 	public BarkTestScreen() {
 
+		DraggableRectangleActor fakeEnemy = new DraggableRectangleActor(Color.MAGENTA, 90, 50, 20, 20);
+		fakeEnemy.setVisible(false);
+
 		DragListener enemyListener = new DraggableListenerImpl();
 		DraggableRectangleActor enemy = new DraggableRectangleActor(Color.MAGENTA, 90, 50, 20, 20);
+		enemy.setFakeActor(fakeEnemy);
 		((DraggableListener) enemyListener).setActor(enemy);
 		enemy.addListener(enemyListener);
 		enemy.debug();
@@ -46,6 +50,7 @@ public class BarkTestScreen implements Screen {
 		stage.addActor(pirSensor);
 		stage.addActor(distanceSensor);
 		stage.addActor(enemy);
+		stage.addActor(fakeEnemy);
 	}
 
 	@Override

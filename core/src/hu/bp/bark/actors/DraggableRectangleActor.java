@@ -43,6 +43,14 @@ public class DraggableRectangleActor extends AbstractDraggableActor {
 		return 10;
 	}
 
+	private void switchOnFake() {
+		getFakeActor().setBounds(getX(), getY(), getWidth(), getHeight());
+		getFakeActor().toFront();
+		getFakeActor().setVisible(true);
+		getFakeActor().setColor(_hitColor);
+		getFakeActor().debug();
+	}
+
 	@Override
 	public void dragStart(float x, float y, int button) {
 		_x0 = getX();
@@ -51,26 +59,31 @@ public class DraggableRectangleActor extends AbstractDraggableActor {
 		_dragY = y;
 		_width0 = getWidth();
 		_height0 = getHeight();
-		
+
+		switchOnFake();
 	}
 
 	@Override
 	public void drag(float x, float y, int button) {
-		Gdx.app.log("Draggable", x + "," + y);
 		if (Input.Buttons.LEFT == button) {
-			float newHeight = Math.max(getMinHeight(), _height0 + _y0 - y);
-			float newWidth = Math.max(getMinWidth(), _width0 + _x0 - y);
+			Gdx.app.log("Draggable", "LBT " + x + "," + y);
+			float newHeight = Math.max(getMinHeight(), _height0 + y -_dragY);
+			float newWidth = Math.max(getMinWidth(), _width0 + x - _dragX);
 
-			setBounds(getX(), getY(), newWidth, newHeight);
+			getFakeActor().setBounds(getX(), getY(), newWidth, newHeight);
 		} else if (Input.Buttons.RIGHT == button) {
-			setBounds(_x0 + x - _dragX, _y0 + y - _dragY, _width0, _height0);
+			Gdx.app.log("Draggable", "RBT " + x + "," + y);
+			getFakeActor().setBounds(_x0 + x - _dragX, _y0 + y - _dragY, _width0, _height0);
 		}
-		
 	}
 
 	@Override
 	public void dragStop(float x, float y, int button) {
-	}
+		getFakeActor().toBack();
+		getFakeActor().setVisible(false);
 
+		setBounds(getFakeActor().getX(), getFakeActor().getY(), getFakeActor().getWidth(), getFakeActor().getHeight());
+		toFront();
+	}
 
 }

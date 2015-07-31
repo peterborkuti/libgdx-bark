@@ -8,6 +8,7 @@ public abstract class AbstractDraggableActor extends Actor implements DraggableA
 	protected Color _color;
 	protected Color _defaultColor;
 	protected Color _hitColor = Color.RED;
+	private Actor fakeActor;
 
 	public AbstractDraggableActor(Color defaultColor, Color hitColor) {
 		_defaultColor = defaultColor;
@@ -23,6 +24,16 @@ public abstract class AbstractDraggableActor extends Actor implements DraggableA
 	@Override
 	public void setColorHitColor() {
 		_color = _hitColor;
+	}
+
+	@Override
+	public void setFakeActor(Actor actor) {
+		fakeActor = actor;
+		
+	}
+
+	public Actor getFakeActor() {
+		return fakeActor;
 	}
 
 

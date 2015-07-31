@@ -59,13 +59,14 @@ public class DraggableListenerImpl extends DragListener implements DraggableList
 	public void touchUp(InputEvent event, float x, float y, int pointer,
 			int button) {
 
+		super.touchUp(event, x, y, pointer, button);
+
 		if (isTouchDown && pressedButton == button) {
 			isTouchDown = false;
 			pressedButton = -1;
 			pressedPointer--;
 		}
 
-		super.touchUp(event, x, y, pointer, button);
 	}
 
 	@Override
