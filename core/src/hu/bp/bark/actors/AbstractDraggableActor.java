@@ -10,6 +10,10 @@ public abstract class AbstractDraggableActor extends Actor implements DraggableA
 	}
 
 	protected ActorState actorState;
+	public ActorState getActorState() {
+		return actorState;
+	}
+
 	protected Color _color;
 	protected Color _defaultColor;
 	protected Color _hitColor = Color.RED;
@@ -44,19 +48,19 @@ public abstract class AbstractDraggableActor extends Actor implements DraggableA
 
 	@Override
 	public void dragStop(float x, float y, int button) {
-		getFakeActor().toBack();
-		getFakeActor().setVisible(false);
+		fakeActor.toBack();
+		fakeActor.setVisible(false);
 
-		setBounds(getFakeActor().getX(), getFakeActor().getY(), getFakeActor().getWidth(), getFakeActor().getHeight());
+		setBounds(fakeActor.getX(), fakeActor.getY(), fakeActor.getWidth(), fakeActor.getHeight());
 		toFront();
 	}
 
 	private void switchOnFake() {
-		getFakeActor().setBounds(getX(), getY(), getWidth(), getHeight());
-		getFakeActor().toFront();
-		getFakeActor().setVisible(true);
-		getFakeActor().setColor(_hitColor);
-		getFakeActor().debug();
+		fakeActor.setBounds(getX(), getY(), getWidth(), getHeight());
+		fakeActor.toFront();
+		fakeActor.setVisible(true);
+		fakeActor.setColor(_hitColor);
+		fakeActor.debug();
 	}
 
 	@Override

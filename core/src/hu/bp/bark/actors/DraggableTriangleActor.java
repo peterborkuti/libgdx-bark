@@ -47,7 +47,9 @@ public class DraggableTriangleActor extends AbstractDraggableActor {
 		this.setVisible(true);
 		_leftX = leftX;
 		_leftY = leftY;
-		drag(width, height, Input.Buttons.LEFT);
+
+		float newY = _leftY - height / 2;
+		setBounds(_leftX, newY, width, height);
 	}
 
 	@Override
@@ -93,13 +95,22 @@ public class DraggableTriangleActor extends AbstractDraggableActor {
 	public void drag(float x, float y, int button) {
 		Gdx.app.log("Draggable", x + "," + y);
 		if (Input.Buttons.LEFT == button) {
-			float newHeight = Math.max(getMinHeight(), actorState.height + actorState.y0 - y);
-			float newWidth = Math.max(getMinWidth(), actorState.width + actorState.x0 - y);
+			float newHeight = 
+				Math.max(
+					getMinHeight(), 
+					getActorState().height + getActorState().y0 - y);
+			float newWidth =
+				Math.max(
+					getMinWidth(),
+					getActorState().width + x - getActorState().x0);
 
 			float newY = _leftY - newHeight / 2;
-			setBounds(_leftX, newY, newWidth, newHeight);
+			getFakeActor().setBounds(_leftX, newY, newWidth, newHeight);
 		} else if (Input.Buttons.RIGHT == button) {
-			setBounds(actorState.x0 + x - actorState.dragX, actorState.y0 + y - actorState.dragY, actorState.width, actorState.height);
+			getFakeActor().setBounds(
+				getActorState().x0 + x - getActorState().dragX,
+				getActorState().y0 + y - getActorState().dragY,
+				getActorState().width, getActorState().height);
 		}
 	}
 
