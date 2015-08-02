@@ -35,7 +35,6 @@ public class BarkTestScreen implements Screen {
 		enemy.setFakeActor(fakeEnemy);
 		((DraggableListener) enemyListener).setActor(enemy);
 		enemy.addListener(enemyListener);
-		enemy.debug();
 
 		DraggableTriangleActor fakeTriangle = new DraggableTriangleActor(Actors.FAKE, Color.MAGENTA, Color.RED, 90, 50, 20, 20);
 		fakeTriangle.setVisible(false);
@@ -45,15 +44,12 @@ public class BarkTestScreen implements Screen {
 		pirSensor.setFakeActor(fakeTriangle);
 		((DraggableListener) pirListener).setActor(pirSensor);
 		pirSensor.addListener(pirListener);
-		pirSensor.debug();
 
 		DragListener distanceListener = new DraggableListenerImpl();
 		distanceSensor = new DraggableTriangleActor(Actors.HCSR04, Color.BLUE, Color.RED, 0, 50, 30, 50);
 		distanceSensor.setFakeActor(fakeTriangle);
 		((DraggableListener) distanceListener).setActor(distanceSensor);
 		distanceSensor.addListener(distanceListener);
-		distanceSensor.debug();
-	
 
 		//Actor a = new TestActor();
 		//a.debug();
