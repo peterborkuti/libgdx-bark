@@ -1,6 +1,8 @@
 package hu.bp.bark.actors;
 
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
 public abstract class AbstractDraggableActor extends Actor implements DraggableActor {
@@ -14,16 +16,35 @@ public abstract class AbstractDraggableActor extends Actor implements DraggableA
 		return actorState;
 	}
 
+	protected Actors actorType;
 	protected Color _color;
 	protected Color _defaultColor;
 	protected Color _hitColor = Color.RED;
+	protected ShapeRenderer _renderer;
+
 	private Actor fakeActor;
 
-	public AbstractDraggableActor(Color defaultColor, Color hitColor) {
+	public AbstractDraggableActor(
+		Actors actor, Color defaultColor, Color hitColor,
+		float x0, float y0, float width, float height) {
+
 		_defaultColor = defaultColor;
 		_color = defaultColor;
 		_hitColor = hitColor;
 		actorState = new ActorState();
+		actorType = actor;
+		_renderer = new ShapeRenderer();
+
+		init(x0, y0, width, height);
+	}
+
+	@Override
+	public void init(float x, float y, float width, float height) {
+		setBounds(x, y, width, height);
+	}
+
+	public Actors getActorType() {
+		return actorType;
 	}
 
 	@Override
@@ -55,12 +76,11 @@ public abstract class AbstractDraggableActor extends Actor implements DraggableA
 		toFront();
 	}
 
-	private void switchOnFake() {
+	public void switchOnFake() {
 		fakeActor.setBounds(getX(), getY(), getWidth(), getHeight());
 		fakeActor.toFront();
 		fakeActor.setVisible(true);
 		fakeActor.setColor(_hitColor);
-		fakeActor.debug();
 	}
 
 	@Override
@@ -74,6 +94,28 @@ public abstract class AbstractDraggableActor extends Actor implements DraggableA
 
 		switchOnFake();
 	}
+
+	public void drag(float x, float y, int button) {
+		if (Input.Buttons.LEFT == button) {
+			float newHeight = Math.max(getMinHeight(), actorState.height + y -actorState.dragY);
+			float newWidth = Math.max(getMinWidth(), actorState.width + x - actorState.dragX);
+
+			getFakeActor().setBounds(getX(), getY(), newWidth, newHeight);
+		} else if (Input.Buttons.RIGHT == button) {
+			getFakeActor().setBounds(actorState.x0 + x - actorState.dragX, actorState.y0 + y - actorState.dragY, actorState.width, actorState.height);
+		}
+	}
+
+	public float getMinHeight() {
+		return 10;
+	}
+
+	public float getMinWidth() {
+		return 10;
+	}
+
+
+
 
 
 }

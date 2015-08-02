@@ -1,7 +1,6 @@
 package hu.bp.bark.actors;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 
 public interface DraggableActor {
 
@@ -10,6 +9,9 @@ public interface DraggableActor {
 	public void setColorHitColor();
 	public void setFakeActor(Actor actor);
 	public Actor getFakeActor();
+	public Actors getActorType();
+
+	public void init(float x0, float y0, float width, float height);
 	
 	// from DragListener
 	public void dragStart (float x, float y, int button);
