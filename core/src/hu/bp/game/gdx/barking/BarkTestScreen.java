@@ -1,20 +1,15 @@
 package hu.bp.game.gdx.barking;
 
 import hu.bp.bark.actors.Actors;
-import hu.bp.bark.actors.DraggableActor;
 import hu.bp.bark.actors.DraggableListener;
 import hu.bp.bark.actors.DraggableListenerImpl;
 import hu.bp.bark.actors.DraggableRectangleActor;
 import hu.bp.bark.actors.DraggableTriangleActor;
-import hu.bp.geometry.Triangle;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
@@ -61,6 +56,7 @@ public class BarkTestScreen implements Screen {
 		stage.addActor(enemy);
 		stage.addActor(fakeEnemy);
 		stage.addActor(fakeTriangle);
+
 	}
 
 	@Override
@@ -79,24 +75,9 @@ public class BarkTestScreen implements Screen {
 		stage.act(delta);
 		//stage.getViewport().apply();
 	    stage.draw();
-	    checkCollisions();
 	}
 
-	private void checkCollisions() {
 
-		Triangle tPir = new Triangle(pirSensor);
-		Triangle tDis = new Triangle(distanceSensor);
-
-		
-		Rectangle rEnemy = new Rectangle(enemy.getX(), enemy.getY(), enemy.getWidth(), enemy.getHeight());
-
-		if (tPir.overlaps(rEnemy)) {
-			Gdx.app.log("Bark", "PIR");
-		}
-		if (tDis.overlaps(rEnemy)) {
-			Gdx.app.log("Bark", "INSIGHT");
-		}
-	}
 
 	@Override
 	public void resize(int width, int height) {
@@ -127,5 +108,18 @@ public class BarkTestScreen implements Screen {
 		stage.dispose();
 
 	}
+
+	public DraggableRectangleActor getEnemy() {
+		return enemy;
+	}
+
+	public DraggableTriangleActor getPirSensor() {
+		return pirSensor;
+	}
+
+	public DraggableTriangleActor getDistanceSensor() {
+		return distanceSensor;
+	}
+
 
 }

@@ -6,16 +6,13 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
 public abstract class AbstractDraggableActor extends Actor implements DraggableActor {
-	
-	class ActorState {
-		public float x0, y0, dragX, dragY, width, height;
-	}
 
-	protected ActorState actorState;
-	public ActorState getActorState() {
+	public ActorState getActorStateBeforeDrag() {
 		return actorState;
 	}
 
+	protected ActorState actorState;
+	private long lastChange;
 	protected Actors actorType;
 	protected Color _color;
 	protected Color _defaultColor;
@@ -34,8 +31,13 @@ public abstract class AbstractDraggableActor extends Actor implements DraggableA
 		actorState = new ActorState();
 		actorType = actor;
 		_renderer = new ShapeRenderer();
+		lastChange = System.currentTimeMillis();
 
 		init(x0, y0, width, height);
+	}
+
+	public long getLastChange() {
+		return lastChange;
 	}
 
 	@Override
@@ -74,6 +76,7 @@ public abstract class AbstractDraggableActor extends Actor implements DraggableA
 
 		setBounds(fakeActor.getX(), fakeActor.getY(), fakeActor.getWidth(), fakeActor.getHeight());
 		toFront();
+		lastChange = System.currentTimeMillis();
 	}
 
 	public void switchOnFake() {

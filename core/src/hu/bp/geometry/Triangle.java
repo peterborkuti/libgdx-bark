@@ -1,10 +1,8 @@
 package hu.bp.geometry;
 
-import static hu.bp.geometry.Triangle.LEFT;
-import static hu.bp.geometry.Triangle.LOWER;
-import static hu.bp.geometry.Triangle.UPPER;
-
 import com.badlogic.gdx.math.GeometryUtils;
+import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -40,12 +38,44 @@ public class Triangle {
 		points[LOWER] = new Vector2(x2, y2);
 	}
 
-	public boolean overlaps(Rectangle r) {
+	private boolean rectangleCornerInTriangle(Rectangle r) {
 		return
 			pointIn(new Vector2(r.getX(), r.getY())) ||
 			pointIn(new Vector2(r.getX() + r.getWidth(), r.getY())) ||
 			pointIn(new Vector2(r.getX(), r.getY() + r.getHeight())) ||
 			pointIn(new Vector2(r.getX() + r.getWidth(), r.getY() + r.getHeight()));
+	}
+
+	public Polygon getPolygon() {
+		Polygon pol = new Polygon( new float[] {
+				points[LEFT].x, points[LEFT].y,
+				points[LOWER].x, points[LOWER].y,
+				points[UPPER].x, points[UPPER].y});
+		return pol;
+	}
+
+	private boolean triangleLinesCutRectangle(Rectangle r) {
+		Polygon tr = getPolygon();
+
+		Vector2 left1 = new Vector2(r.x, r.y + r.height);
+		Vector2 left2 = new Vector2(r.x, r.y);
+
+		Vector2 upper1 = new Vector2(r.x, r.y + r.height);
+		Vector2 upper2 = new Vector2(r.x + r.width, r.y + r.height);
+
+		Vector2 lower1 = new Vector2(r.x, r.y);
+		Vector2 lower2 = new Vector2(r.x + r.width, r.y);
+
+		return 
+			(Intersector.intersectSegmentPolygon(left1, left2, tr) ||
+			Intersector.intersectSegmentPolygon(upper1, upper2, tr) ||
+			Intersector.intersectSegmentPolygon(lower1, lower2, tr));
+	}
+
+	public boolean overlaps(Rectangle r) {
+		return
+			rectangleCornerInTriangle(r) ||
+			triangleLinesCutRectangle(r);
 	}
 
 	public void setPoints(Actor a) {
