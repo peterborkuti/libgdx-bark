@@ -81,6 +81,7 @@ public abstract class AbstractDraggableActor extends Actor implements DraggableA
 		fakeActor.toFront();
 		fakeActor.setVisible(true);
 		fakeActor.setColor(_hitColor);
+		fakeActor.setDebug(true);
 	}
 
 	@Override
@@ -95,14 +96,25 @@ public abstract class AbstractDraggableActor extends Actor implements DraggableA
 		switchOnFake();
 	}
 
-	public void drag(float x, float y, int button) {
-		if (Input.Buttons.LEFT == button) {
-			float newHeight = Math.max(getMinHeight(), actorState.height + y -actorState.dragY);
-			float newWidth = Math.max(getMinWidth(), actorState.width + x - actorState.dragX);
+	public void resize(float newWidth, float newHeight) {
+		getFakeActor().setBounds(getX(), getY(), newWidth, newHeight);
+	}
 
-			getFakeActor().setBounds(getX(), getY(), newWidth, newHeight);
-		} else if (Input.Buttons.RIGHT == button) {
-			getFakeActor().setBounds(actorState.x0 + x - actorState.dragX, actorState.y0 + y - actorState.dragY, actorState.width, actorState.height);
+	public void replace(float newX, float newY) {
+		getFakeActor().setBounds(newX, newY, getWidth(), getHeight());
+	}
+
+	public void drag(float x, float y, int button) {
+		if (Input.Buttons.RIGHT == button) {
+			float newWidth = Math.max(getMinWidth(), actorState.width + x - actorState.dragX);
+			float newHeight = Math.max(getMinHeight(), actorState.height + y -actorState.dragY);
+
+			resize(newWidth, newHeight);
+		} else if (Input.Buttons.LEFT == button) {
+			float newX = actorState.x0 + x - actorState.dragX;
+			float newY = actorState.y0 + y - actorState.dragY;
+
+			replace(newX, newY);
 		}
 	}
 
@@ -113,9 +125,6 @@ public abstract class AbstractDraggableActor extends Actor implements DraggableA
 	public float getMinWidth() {
 		return 10;
 	}
-
-
-
 
 
 }
