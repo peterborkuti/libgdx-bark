@@ -1,11 +1,10 @@
 package hu.bp.comm;
 
+import static hu.bp.geometry.Triangle.LEFT;
 import hu.bp.bark.actors.AbstractDraggableActor;
 import hu.bp.bark.actors.ActorState;
 import hu.bp.geometry.Triangle;
-import static hu.bp.geometry.Triangle.LEFT;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
@@ -64,11 +63,13 @@ public class GraphicSerialCommunicator implements SerialCommunicator {
 		//if PIR sensor place changed, PIR should sign it
 		if ((System.currentTimeMillis() - pirSensor.getLastChange()) <
 			PIR_MEMORY_DELAY) {
+
 			return true;
 		}
 
 		if ((System.currentTimeMillis() - enemy.getLastChange()) >
-				PIR_MEMORY_DELAY) {
+			PIR_MEMORY_DELAY) {
+
 			return false;
 		}
 

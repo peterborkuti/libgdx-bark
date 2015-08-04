@@ -62,6 +62,26 @@ public class CommHelper {
 		this.listener = listener;
 	}
 
+	public CommHelper() {
+	}
+
+	public boolean isCommPort() {
+		@SuppressWarnings("unchecked")
+		java.util.Enumeration<CommPortIdentifier> ports = CommPortIdentifier
+				.getPortIdentifiers();
+
+		boolean isSerialPort = false;
+
+		while (!isSerialPort && ports.hasMoreElements()) {
+			CommPortIdentifier curPort = ports.nextElement();
+
+			isSerialPort =
+				(CommPortIdentifier.PORT_SERIAL == curPort.getPortType());
+		}
+
+		return isSerialPort;
+	}
+
 	public void listPorts() {
 		Gdx.app.log("CommPort", "list port");
 

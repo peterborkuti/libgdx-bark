@@ -49,11 +49,11 @@ public class BarkImpl implements Bark {
 					new BarkDelayImpl(maxDelayAfterBark, Distance.FAR.ordinal());
 
 				int ordinal = dist.ordinal();
-				
+
 				long delay = barkDelay.getDelayInMillis(ordinal);
 
 				Gdx.app.log(
-					"BarkImpl",
+					"BarkImpl ",
 					ordinal + 
 						"delay:" + delay + "(" + barkDelay.getMinDelay(ordinal) +
 						"," + barkDelay.getMaxDelay(ordinal) + ")");
